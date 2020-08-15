@@ -140,6 +140,7 @@ func (b *Board) MakeCoordMove(str string) error {
 func MoveFromCoord(str string) (Move, error) {
 	length := len(str)
 	if length < 4 {
+		fmt.Println(str)
 		return NilMove, ErrUnknownMove
 	}
 	// handle promotion
@@ -151,10 +152,12 @@ func MoveFromCoord(str string) (Move, error) {
 	}
 	fromPos, err := ParsePosition(str[:2])
 	if err != nil {
+		fmt.Printf("Parse from Position: %s", str[:2])
 		return NilMove, ErrUnknownMove
 	}
-	toPos, err := ParsePosition(str[2:])
+	toPos, err := ParsePosition(str[2:4])
 	if err != nil {
+		fmt.Printf("Parse to Position: %s", str[2:4])
 		return NilMove, ErrUnknownMove
 	}
 	return Move{fromPos, toPos, promote, ""}, nil
@@ -240,6 +243,7 @@ func (b *Board) MoveFromAlgebraic(str string, color Color) (Move, error) {
 						return Move{fromPos, pos, NoPiece, san}, nil
 					}
 				}
+				fmt.Println("knight move ambiguous", str)
 				return NilMove, ErrAmbiguousMove
 			}
 			if err != nil {
@@ -688,6 +692,9 @@ func (b Board) findAttackingPawn(pos Position, color Color, check bool) (Positio
 	}
 
 	if count > 1 {
+		fmt.Println("findAttackingPawn", b.lastMove)
+		fmt.Println("position", pos)
+		fmt.Println("board", b.String())
 		return NoPosition, ErrAmbiguousMove
 	}
 	if retPos == NoPosition {
@@ -731,6 +738,7 @@ func (b Board) findAttackingPawnFromFile(pos Position, color Color, file File) (
 		}
 	}
 	if count > 1 {
+		fmt.Println("findAttackingPawnFromFile", b.lastMove)
 		return NoPosition, ErrAmbiguousMove
 	}
 	if retPos == NoPosition {
@@ -804,6 +812,7 @@ func (b Board) findAttackingBishop(pos Position, color Color, check bool) (Posit
 	}
 
 	if count > 1 {
+		fmt.Println("findAttackingBishop", b.lastMove)
 		return NoPosition, ErrAmbiguousMove
 	}
 	if count == 0 {
